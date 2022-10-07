@@ -37,12 +37,18 @@ function SetGitUser() {
   
 # Set a wallpaper from the wallpapers folder
 function SetRandomWallpaper() {
+	$pathWallpapers = "$pathRoot\wallpapers"
+
 	try {
-		Set-Location $pathRoot\wallpapers -ErrorAction Stop
+		Set-Location $pathWallpapers -ErrorAction Stop
 	}
 	catch {
-		Output "wallpaper" "Could not find wallpapers folder. Please install it in '$pathRoot\wallpapers'." Red
+		Output "wallpaper" "Could not find wallpapers folder. Please place JPEG wallpapers in '$pathWallpapers'." Yellow
 		return
+	}
+
+	if ([int](Get-ChildItem | Measure-Object).Count -eq 0) {
+		Output "wallpaper" "Wallpapers folder '$pathWallpapers' is empty. Please place JPEG wallpapers in it." Yellow
 	}
   
 	try {
@@ -54,10 +60,10 @@ function SetRandomWallpaper() {
 		return
 	}
 
-	$wallpaper = "$($pathRoot)wallpapers\$rand.jpg"
+	$wallpaper = "$pathWallpapers\$rand.jpg"
 
 	if (-not(Test-Path $wallpaper)) {
-		Output "wallpaper" "Wallpaper '$wallpaper' does not exist." Yellow
+		Output "wallpaper" "Wallpaper '$wallpaper' does not exist. Please number JPEG wallpapers in ascending order." Yellow
 	}
   
 	try {
@@ -69,13 +75,13 @@ function SetRandomWallpaper() {
 		return
 	}
   
-	Output "wallpaper" "Set wallpaper to fox$rand.jpg." Green
+	Output "wallpaper" "Set wallpaper to $rand.jpg." Green
 }
   
 # clean up VS Code by removing useless extensions
 # idea credit: https://github.com/TheodoreLHeureux/setup-script
 function CleanVSCode() {
-	# $pathVSCodeExtensions = "C:\Program Files\Microsoft VS Code\data\extensions\"
+	$pathVSCodeExtensions = "C:\Program Files\Microsoft VS Code\data\extensions\"
 	$vscodeExtWhitelist = @(
 		"editorconfig.editorconfig"
 		"angular.ng-template"
@@ -84,27 +90,22 @@ function CleanVSCode() {
 		"redhat.vscode-xml"
 	)
 
-	Output -NoNewLine "vs code" "Uninstalling useless extensions...   0 %" Cyan
+	# remove unwanted extensions
+	Output -NoNewLine "vs code" "Uninstalling useless extensions..." Cyan
+	try {
+		Remove-Item $pathVSCodeExtensions\* -Recurse -Force
+	}
+	catch {
+		Output "vs code" "Could not remove one or many extensions. Make sure VS Code is closed."
+	}
+	
+	# install wanted extensions
+	Output -NoNewLine "vs code" "Installing new extensions...   0 %" Cyan
   
-	for ($i = 0; $i -lt $vscodeExtBlacklist.Length; $i++) {
-		$progress = ([string]([math]::Round($i * 100 / $vscodeExtBlacklist.Length))).PadLeft(3, " ")   
+	for ($i = 0; $i -lt $vscodeExtWhitelist.Length; $i++) {
+		$progress = ([string]([math]::Round($i * 100 / $vscodeExtWhitelist.Length))).PadLeft(3, " ")   
 		code --uninstall-extension $vscodeExtBlacklist[$i] > $null    
 		Output -NoNewline "" "`b`b`b`b`b$progress %"
-	}
-  
-	# Remove-Item -Recurse -Force $pathVSCodeExtensions
-  
-	# second pass to clear dependencies
-	# TODO: auto-detect extensions with code command 
-	code --uninstall-extension ms-dotnettools.vscode-dotnet-runtime > $null 
-	code --uninstall-extension ms-vscode.azure-account > $null 
-	code --uninstall-extension ms-python.python > $null 
-	code --uninstall-extension ms-vscode.test-adapter-converter > $null 
-	code --uninstall-extension hbenl.vscode-test-explorer > $null 
-  
-	# update kept extensions and install new ones
-	foreach ($extension in $vscodeExtWhitelist) {
-		code --log "critical" --force --install-extension $extension > $null 
 	}
   
 	Output "vs code" "Cleaned up VS Code extensions." Green

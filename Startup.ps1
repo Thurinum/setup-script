@@ -36,11 +36,11 @@ function ShowMenu() {
 		{ $_ -in 'a', 'A' } {
 			foreach ($feature in $features) {
 				# skip features marked as uncommon
-				if ($feature[2] -eq $true) {
+				if ($feature[0] -eq $true) {
 					continue 
 				}   
   
-				Invoke-Expression $feature[0]
+				Invoke-Expression $feature[1]
 			}
 			break        
 		}
@@ -67,7 +67,7 @@ function ShowMenu() {
 # Show individual selection menu
 function ShowAdvancedMenu() {
 	for ($i = 0; $i -lt $features.Length; $i++) {
-		Output -NoAnimation "$($i)" $features[$i][1]
+		Output -NoAnimation "$($i)" $features[$i][2]
 	}
 	Output -NoAnimation "Q" "Go back"
   
@@ -97,7 +97,7 @@ function ShowAdvancedMenu() {
 	}
   
 	# run associated command from $features array (see Features section)
-	Invoke-Expression $features[$userInput][0]
+	Invoke-Expression $features[$userInput][1]
 }
   
 # Ask for confirm after applying changes
