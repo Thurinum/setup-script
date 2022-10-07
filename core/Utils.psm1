@@ -38,26 +38,4 @@ function CheckForAdmin() {
 	}
 }
 
-function GetRootPath() {
-	$pathRoot     = $null
-	$pathOneDrive = "C:\Users\${studentId}\OneDrive - C�gep �douard-Montpetit\Startup\"
-	$pathLab      = "\\laboratoire.collegeem.qc.ca\Stockage\usagers\Etudiants\${studentId}\Startup\"
-	$pathDesktop  = "C:\Users\${studentId}\Desktop\Startup\" 
-	
-	if (Test-Path $pathOneDrive) { 
-	    Output "setup" "Using OneDrive for storage at '$pathOneDrive'." Yellow
-	    $pathRoot = $pathOneDrive
-	} elseif (Test-Path $pathLab) {
-	    Output "setup" "Using Laboratoire storage at '$pathLab'." Yellow
-	    $pathRoot = $pathLab
-	} elseif (Test-Path $pathDesktop) {
-	    Output "setup" "Using desktop for storage at '$pathDesktop'." Yellow    
-	    $pathRoot = $pathFallback
-	}
-  
-	return $pathRoot
-  }
-
-Export-ModuleMember -Function Output
-Export-ModuleMember -Function CheckForAdmin
-Export-ModuleMember -Function GetRootPath
+Export-ModuleMember -Function *

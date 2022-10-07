@@ -1,7 +1,5 @@
 ﻿Import-Module -Name $PSScriptRoot\Utils
-
-$studentId = $env:UserName
-$pathRoot = GetRootPath
+Import-Module -Name $PSScriptRoot\Env
 
 # Set input language to US
 function SetUSKeyboard() {
@@ -110,6 +108,7 @@ function CleanVSCode() {
 # Install the Qt framework
 function SetupQt() {
 	$path7z = "C:\Program Files\7-Zip\7zG.exe"
+	$pathQt = "$($pathRoot)software"
 	$pathQtBundle = "$($pathRoot)software\Qt.7z"
 	$pathQtProject = "$($pathRoot)software\QtProject"
 	$pathQtProjectOutput = "C:\Users\${studentId}\AppData\Roaming\QtProject"
@@ -127,8 +126,9 @@ function SetupQt() {
   
 	if (-not(Test-Path $pathQtCreator)) {
 		try {
+			Set-Location $pathQt
+			Start-Process $path7z -ArgumentList "x Qt.7z -oC:\" -Wait
 			Copy-Item ($pathQtProject) $pathQtProjectOutput -Recurse -Force
-			Start-Process $path7z -ArgumentList "x $pathQtBundle -oC:\" -Wait
 		}
 		catch {
 			Output "qt" "Could not extract Qt from archive. Are the paths correct?" Red
