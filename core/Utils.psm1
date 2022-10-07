@@ -8,7 +8,7 @@
 		[switch] $NoNewline,
 
 		[parameter(Mandatory = $false)]
-		[switch] $NoAnimation
+		[switch] $Animate
 	)
 
 	$header = if ($Category -eq "") { "" } else { "[$($Category.ToUpper())] " }
@@ -16,18 +16,18 @@
 	$newline = if (-not($PSBoundParameters.ContainsKey("NoNewLine"))) { "`n" } else { "" }
 	$text = "$header$Message$newline"
 
-	if ($PSBoundParameters.ContainsKey("NoAnimation")) {
-		Write-Host $text -NoNewline -ForegroundColor $Color
-		Start-Sleep -Milliseconds 50
+	if ($PSBoundParameters.ContainsKey("Animate")) {
+		for ($i = 0; $i -lt $text.Length; $i++) {
+			$c = $text[$i]
+	
+			Write-Host $c -NoNewline -ForegroundColor $Color
+			Start-Sleep -Milliseconds 1
+		}
 		return
 	}
 
-	for ($i = 0; $i -lt $text.Length; $i++) {
-		$c = $text[$i]
-
-		Write-Host $c -NoNewline -ForegroundColor $Color
-		Start-Sleep -Milliseconds 1
-	}
+	Write-Host $text -NoNewline -ForegroundColor $Color
+	Start-Sleep -Milliseconds 50
 }
 
 function CheckForAdmin() {
