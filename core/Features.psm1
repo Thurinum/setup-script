@@ -43,12 +43,12 @@ function SetRandomWallpaper() {
 		Set-Location $pathWallpapers -ErrorAction Stop
 	}
 	catch {
-		Output "wallpaper" "Could not find wallpapers folder. Please place JPEG wallpapers in '$pathWallpapers'." Yellow
+		Output "theme" "Could not find wallpapers folder. Please place JPEG wallpapers in '$pathWallpapers'." Yellow
 		return
 	}
 
 	if ([int](Get-ChildItem | Measure-Object).Count -eq 0) {
-		Output "wallpaper" "Wallpapers folder '$pathWallpapers' is empty. Please place JPEG wallpapers in it." Yellow
+		Output "theme" "Wallpapers folder '$pathWallpapers' is empty. Please place JPEG wallpapers in it." Yellow
 	}
   
 	try {
@@ -56,14 +56,14 @@ function SetRandomWallpaper() {
 		$rand = Get-Random -Minimum 1 -Maximum $count
 	}
 	catch {
-		Output "wallpaper" "Could not generate random number: $_" Red
+		Output "theme" "Could not generate random number: $_" Red
 		return
 	}
 
 	$wallpaper = "$pathWallpapers\$rand.jpg"
 
 	if (-not(Test-Path $wallpaper)) {
-		Output "wallpaper" "Wallpaper '$wallpaper' does not exist. Please number JPEG wallpapers in ascending order." Yellow
+		Output "theme" "Wallpaper '$wallpaper' does not exist. Please number JPEG wallpapers in ascending order." Yellow
 	}
   
 	try {
@@ -71,11 +71,11 @@ function SetRandomWallpaper() {
 		Stop-Process -Name explorer -Force
 	}
 	catch {
-		Output "wallpaper" "Could not set required registry key: $_" Red
+		Output "theme" "Could not set required registry key: $_" Red
 		return
 	}
   
-	Output "wallpaper" "Set wallpaper to $rand.jpg." Green
+	Output "theme" "Set wallpaper to $rand.jpg." Green
 }
   
 # clean up VS Code by removing useless extensions
@@ -95,10 +95,10 @@ function CleanVSCode() {
 	Remove-Item $pathVSCodeExtensions\* -Recurse -Force -ErrorAction SilentlyContinue
 	
 	# install wanted extensions
-	Output -NoNewLine "vs code" "Installing new extensions...   0 %" Cyan
+	Output -NoNewLine "vs code" "Installing new extensions...      " Cyan
   
 	for ($i = 0; $i -lt $vscodeExtWhitelist.Length; $i++) {
-		$progress = ([string]([math]::Round($i * 100 / $vscodeExtWhitelist.Length))).PadLeft(3, " ")   
+		$progress = ([string]([math]::Round($($i + 1) * 100 / $vscodeExtWhitelist.Length))).PadLeft(3, " ")   
 		code --force --install-extension $vscodeExtWhitelist[$i] > $null  
 		Output -NoNewline "" "`b`b`b`b`b$progress %"
 	}

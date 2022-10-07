@@ -17,11 +17,11 @@ $features =
 
 # Show main menu
 function ShowMenu() {
-	Output "welcome" "$([System.Security.Principal.WindowsIdentity]::GetCurrent().Name)`n" Cyan
-	Output -NoAnimation "A" "Execute common tweaks"
-	Output -NoAnimation "B" "Execute everything"
-	Output -NoAnimation "C" "Execute individual tweaks"
-	Output -NoAnimation "Q" "Never mind"
+	Output -Animate "welcome" "$([System.Security.Principal.WindowsIdentity]::GetCurrent().Name)`n" Cyan
+	Output "A" "Execute common tweaks"
+	Output "B" "Execute everything"
+	Output "C" "Execute individual tweaks"
+	Output "Q" "Never mind"
   
 	$userInput = Read-Host "`n    Choose an option"
 	Write-Host ""
@@ -67,9 +67,9 @@ function ShowMenu() {
 # Show individual selection menu
 function ShowAdvancedMenu() {
 	for ($i = 0; $i -lt $features.Length; $i++) {
-		Output -NoAnimation "$($i)" $features[$i][2]
+		Output "$($i)" $features[$i][2]
 	}
-	Output -NoAnimation "Q" "Go back"
+	Output "Q" "Go back"
   
 	# get user input
 	$userInput = Read-Host "`n    Choose an option"
