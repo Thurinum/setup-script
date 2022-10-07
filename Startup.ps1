@@ -98,6 +98,8 @@ function ShowAdvancedMenu() {
   
 	# run associated command from $features array (see Features section)
 	Invoke-Expression $features[$userInput][1]
+	Write-Host
+	ShowAdvancedMenu
 }
   
 # Ask for confirm after applying changes
