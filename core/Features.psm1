@@ -91,23 +91,19 @@ function CleanVSCode() {
 	)
 
 	# remove unwanted extensions
-	Output -NoNewLine "vs code" "Uninstalling useless extensions..." Cyan
-	try {
-		Remove-Item $pathVSCodeExtensions\* -Recurse -Force
-	}
-	catch {
-		Output "vs code" "Could not remove one or many extensions. Make sure VS Code is closed."
-	}
+	Output "vs code" "Uninstalling useless extensions..." Cya
+	Remove-Item $pathVSCodeExtensions\* -Recurse -Force -ErrorAction SilentlyContinue
 	
 	# install wanted extensions
 	Output -NoNewLine "vs code" "Installing new extensions...   0 %" Cyan
   
 	for ($i = 0; $i -lt $vscodeExtWhitelist.Length; $i++) {
 		$progress = ([string]([math]::Round($i * 100 / $vscodeExtWhitelist.Length))).PadLeft(3, " ")   
-		code --uninstall-extension $vscodeExtBlacklist[$i] > $null    
+		code --force --install-extension $vscodeExtWhitelist[$i] > $null  
 		Output -NoNewline "" "`b`b`b`b`b$progress %"
 	}
-  
+ 
+	Write-Host
 	Output "vs code" "Cleaned up VS Code extensions." Green
 }
   
