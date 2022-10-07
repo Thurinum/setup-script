@@ -1,5 +1,4 @@
-﻿
-function Output {
+﻿function Output {
 	param (
 		[String] $Category, 
 		[String] $Message,

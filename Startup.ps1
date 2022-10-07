@@ -2,8 +2,8 @@
 # Automated utility for configuring CEM stations                                 v.2.0
 # =======================================================================================
 
-Import-Module -Name .\core\Utils.psm1
-Import-Module -Name .\core\Features.psm1
+Import-Module -Name $PSScriptRoot\core\Utils.psm1
+Import-Module -Name $PSScriptRoot\core\Features.psm1
 
 # 	 basic	function name 		description
 $features = 

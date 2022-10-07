@@ -1,4 +1,4 @@
-﻿Import-Module -Name .\core\Utils.psm1
+﻿Import-Module -Name $PSScriptRoot\Utils
 
 $studentId = $env:UserName
 $pathRoot = GetRootPath
@@ -147,5 +147,4 @@ function SetupQt() {
 	}
 }
 
-Export-ModuleMember -Variable *
 Export-ModuleMember -Function *
