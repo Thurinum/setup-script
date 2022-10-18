@@ -35,7 +35,7 @@ function SetGitUser() {
   
 # Set a wallpaper from the wallpapers folder
 function SetRandomWallpaper() {
-	$pathWallpapers = "$pathRoot\wallpapers"
+	$pathWallpapers = "${pathRoot}wallpapers"
 
 	try {
 		Set-Location $pathWallpapers -ErrorAction Stop
@@ -73,7 +73,7 @@ function SetRandomWallpaper() {
 		return
 	}
   
-	Output "theme" "Set wallpaper to $rand.jpg." Green
+	Output "theme" "Set wallpaper to $wallpaper." Green
 }
   
 # clean up VS Code by removing useless extensions
