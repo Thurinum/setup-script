@@ -28,9 +28,11 @@ function SetDarkTheme() {
 
 # Set Git user and email
 function SetGitUser() {
-	git config --global user.name   $studentId
-	git config --global user.email "$studentId@cegepmontpetit.ca"
-	Output "git" "Set global username and email." Green
+	$email = If ($null -eq $config.email) {"$studentId@cegepmontpetit.ca"} Else {$config.email}
+
+	git config --global user.name  $studentId
+	git config --global user.email $email
+	Output "git" "Set global username and email ($email)." Green
 }
 
 # Setup signing of Git commits using a GPG key (based on github.com/theodore-lheureux/setup-script)
