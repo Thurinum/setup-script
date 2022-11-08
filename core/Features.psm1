@@ -35,12 +35,15 @@ function SetGitUser() {
 
 # Setup signing of Git commits using a GPG key (based on github.com/theodore-lheureux/setup-script)
 function SetGitSigning() {
-	$privateKey = $config.privateKey
+	$gnupg = "${pathRoot}software\GnuPG\bin\gpg.exe"
 
-	# Setup GNUPG
-	Start-Job -Name gitsetup -Scriptblock {
-		Start-Process msiexec.exe -Wait -ArgumentList '/i "${pathRoot}\software\GnuPG.msi" /q'
-	}
+	Output "git" "Importing Git keys into gpg..." Cyan
+	.$gnupg -q --import ${pathRoot}public.gpg
+	.$gnupg -q --import ${pathRoot}private.gpg
+
+	git config --global user.signingkey $config.keyid 
+	git config --global commit.gpgsign true
+	git config --global gpg.program $gnupg
 
 	Output "git" "Setup signing of Git commits." Green
 }
