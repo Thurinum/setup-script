@@ -10,6 +10,7 @@ $features =
 	($true,	"SetFRKeyboard", 		"Change keyboard layout to FR"),
 	($false,	"SetUSKeyboard", 		"Change keyboard layout to US"),
     	($false, 	"SetGitUser", 		"Set the git user and email"),
+	($false, 	"SetGitSigning", 		"Setup Git commit signature"),
     	($false, 	"SetDarkTheme", 		"Enable dark mode"),
     	($false, 	"SetRandomWallpaper", 	"Set a random wallpaper"),
     	($false, 	"CleanVSCode", 		"Clean up the mess of vs code"),

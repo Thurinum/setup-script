@@ -19,5 +19,8 @@ else {
 	Write-Host $pathOneDrive
 }
 
+$config = Get-Content "$pathRoot\config.ini" | ConvertFrom-StringData
+
+Export-ModuleMember -Variable config
 Export-ModuleMember -Variable studentId
 Export-ModuleMember -Variable pathRoot

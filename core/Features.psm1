@@ -32,6 +32,18 @@ function SetGitUser() {
 	git config --global user.email "$studentId@cegepmontpetit.ca"
 	Output "git" "Set global username and email." Green
 }
+
+# Setup signing of Git commits using a GPG key (based on github.com/theodore-lheureux/setup-script)
+function SetGitSigning() {
+	$privateKey = $config.privateKey
+
+	# Setup GNUPG
+	Start-Job -Name gitsetup -Scriptblock {
+		Start-Process msiexec.exe -Wait -ArgumentList '/i "${pathRoot}\software\GnuPG.msi" /q'
+	}
+
+	Output "git" "Setup signing of Git commits." Green
+}
   
 # Set a wallpaper from the wallpapers folder
 function SetRandomWallpaper() {
@@ -85,7 +97,9 @@ function CleanVSCode() {
 		"angular.ng-template"
 		"syler.sass-indented"
 		"haskell.haskell"
-		"redhat.vscode-xml"
+		"redhat.vscode-xml",
+		"ms-vscode.powershell",
+		"tobysmith568.run-in-powershell"
 	)
 
 	# remove unwanted extensions
