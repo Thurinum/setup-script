@@ -101,10 +101,10 @@ function CleanVSCode() {
 		"editorconfig.editorconfig"
 		"angular.ng-template"
 		"syler.sass-indented"
-		"haskell.haskell"
 		"redhat.vscode-xml",
 		"ms-vscode.powershell",
-		"tobysmith568.run-in-powershell"
+		"tobysmith568.run-in-powershell",
+		"github.copilot"
 	)
 
 	# remove unwanted extensions
