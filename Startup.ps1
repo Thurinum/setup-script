@@ -7,23 +7,20 @@ Import-Module -Name $PSScriptRoot\core\Features
 
 # 	 basic	function name 		description
 $features = 
-	($true,		"SetFRKeyboard", 		"Change keyboard layout to FR"),
+	($true,	"SetFRKeyboard", 		"Change keyboard layout to FR"),
 	($false,	"SetUSKeyboard", 		"Change keyboard layout to US"),
-<<<<<<< HEAD
     	($false, 	"SetGitUser", 		"Set the git user and email"),
 	($false, 	"SetGitSigning", 		"Setup Git commit signature"),
     	($false, 	"SetDarkTheme", 		"Enable dark mode"),
     	($false, 	"SetRandomWallpaper", 	"Set a random wallpaper"),
     	($false, 	"CleanVSCode", 		"Clean up the mess of vs code"),
     	($true, 	"SetupQt", 			"Setup the Qt framework and launch Qt Creator")
-=======
-    ($false, 	"SetGitUser", 			"Set the git user and email"),
+      ($false, 	"SetGitUser", 		"Set the git user and email"),
 	($false, 	"SetGitSigning", 		"Setup Git commit signature"),
     ($false, 	"SetDarkTheme", 		"Enable dark mode"),
     ($false, 	"SetRandomWallpaper", 	"Set a random wallpaper"),
-    ($false, 	"CleanVSCode", 			"Clean up the mess of vs code"),
-    ($true, 	"SetupQt", 				"Setup the Qt framework and launch Qt Creator")
->>>>>>> 832f654417782236dfc4b89a2808fbb2301eec60
+    ($false, 	"CleanVSCode", 		"Clean up the mess of vs code"),
+    ($true, 	"SetupQt", 			"Setup the Qt framework and launch Qt Creator")
 
 # Show main menu
 function ShowMenu() {
