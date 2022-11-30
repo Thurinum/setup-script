@@ -28,9 +28,26 @@ function SetDarkTheme() {
 
 # Set Git user and email
 function SetGitUser() {
-	git config --global user.name   $studentId
-	git config --global user.email "$studentId@cegepmontpetit.ca"
-	Output "git" "Set global username and email." Green
+	$email = If ($null -eq $config.email) {"$studentId@cegepmontpetit.ca"} Else {$config.email}
+
+	git config --global user.name  $studentId
+	git config --global user.email $email
+	Output "git" "Set global username and email ($email)." Green
+}
+
+# Setup signing of Git commits using a GPG key (based on github.com/theodore-lheureux/setup-script)
+function SetGitSigning() {
+	$gnupg = "${pathRoot}software\GnuPG\bin\gpg.exe"
+
+	Output "git" "Importing Git keys into gpg..." Cyan
+	.$gnupg -q --import ${pathRoot}public.gpg
+	.$gnupg -q --import ${pathRoot}private.gpg
+
+	git config --global user.signingkey $config.keyid 
+	git config --global commit.gpgsign true
+	git config --global gpg.program $gnupg
+
+	Output "git" "Setup signing of Git commits." Green
 }
   
 # Set a wallpaper from the wallpapers folder
@@ -85,7 +102,9 @@ function CleanVSCode() {
 		"angular.ng-template"
 		"syler.sass-indented"
 		"haskell.haskell"
-		"redhat.vscode-xml"
+		"redhat.vscode-xml",
+		"ms-vscode.powershell",
+		"tobysmith568.run-in-powershell"
 	)
 
 	# remove unwanted extensions
