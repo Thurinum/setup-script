@@ -72,7 +72,8 @@ function UseBundle() {
 		Output "$name" "Found already installed $name. Launching now..." Green
 		Start-Process $pathExec 
 		return
-	} elseif (Test-Path $pathOutput) {
+	} 
+	if (!$pathExec -and (Test-Path $pathOutput)) {
 		Output "$name" "Found already installed $name. Skipping installation." Green
 		return
 	}
@@ -96,7 +97,13 @@ function UseBundle() {
 
 	if ($pathExec) {
 		$extraAction = " Launching now..."
-		Start-Process $pathExec
+		try {
+			Start-Process $pathExec
+		}
+		catch {
+			Output "$name" "Failed to launch $name process!" Red
+			return
+		}
 	}
 
 	Output "$name" "Successfully installed $name.$extraAction" Green
