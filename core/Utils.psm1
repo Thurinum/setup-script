@@ -1,4 +1,6 @@
-﻿function Output {
+﻿Import-Module -Name $PSScriptRoot\Env
+
+function Output {
 	param (
 		[String] $Category, 
 		[String] $Message,
@@ -36,6 +38,59 @@ function CheckForAdmin() {
 		Start-Sleep -Seconds 2
 		exit -1
 	}
+}
+
+function UseBundle() {
+	param(
+		# name of the 7z archive, without extension
+		[String] $name,
+
+		# path to the output folder
+		[String] $pathOutput,
+
+		# path to the output executable
+		[parameter(Mandatory = $false)]
+		[String] $pathExec
+	)
+	$path7z = "C:\Program Files\7-Zip\7zG.exe"
+
+	if (-not(Test-Path $path7z)) {
+		Output "$name" "Cannot find a 7-zip installation at '$path7z'. Verify 7z path." Red
+		return
+	}
+
+	if ($pathExec -and (Test-Path $pathExec)) {
+		Output "$name" "Found already installed $name. Launching now..." Green
+		Start-Process $pathExec 
+		return
+	} elseif (Test-Path $pathOutput) {
+		Output "$name" "Found already installed $name. Skipping installation." Green
+		return
+	}
+
+	$pathBundle = Join-Path $pathRoot "\software\$name.7z"
+
+	if (-not(Test-Path $pathBundle)) {
+		Output "$name" "Cannot find a bundle for $name in '$pathBundle'." Red
+		return
+	}
+	
+	try {
+		Start-Process $path7z -ArgumentList "x `"$pathBundle`" -o`"$pathOutput`"" -Wait
+	}
+	catch {
+		Output "$name" "Could not extract $name from archive '$pathArchive'. Are the paths correct?" Red
+		return
+	}
+
+	$extraAction = ""
+
+	if ($pathExec) {
+		$extraAction = " Launching now..."
+		Start-Process $pathExec
+	}
+
+	Output "$name" "Successfully installed $name.$extraAction" Green
 }
 
 Export-ModuleMember -Function *

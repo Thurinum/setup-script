@@ -127,44 +127,37 @@ function CleanVSCode() {
 	Write-Host
 	Output "vs code" "Cleaned up VS Code extensions." Green
 }
-  
+
+function Set-Env() {
+	param(
+		[String] $Name,
+		[String] $Value
+	)
+
+	[Environment]::SetEnvironmentVariable($Name, $Value, [System.EnvironmentVariableTarget]::Machine)
+}
+
+# Install IntelliJ IDEA, the Android SDK version 33, and an Android emulator image
+function Install-Android() {
+	$homePath = "C:\Users\${studentId}"
+	
+	Set-Env "ANDROID_HOME" "$homePath\AppData\Local\Android\Sdk"
+	Set-Env "ANDROID_ROOT" "$homePath\AppData\Local\Android\Sdk"
+	Set-Env "ANDROID_AVD_HOME" "$homePath\.android"
+
+	UseBundle "IntelliJ" "C:\JetBrains\apps" "C:\JetBrains\apps\IDEA-U\ch-0\223.8617.56\bin\idea64.exe"
+	UseBundle "AndroidSdk" "$homePath\AppData\Local\Android"
+	UseBundle "AndroidEmulator" "$homePath"
+	UseBundle "GradleCache" "$homePath\.gradle"
+}
+
 # Install the Qt framework
-function SetupQt() {
-	$path7z = "C:\Program Files\7-Zip\7zG.exe"
-	$pathQt = "$($pathRoot)software"
-	$pathQtBundle = "$($pathRoot)software\Qt.7z"
+function Install-Qt() {
 	$pathQtProject = "$($pathRoot)software\QtProject"
 	$pathQtProjectOutput = "C:\Users\${studentId}\AppData\Roaming\QtProject"
-	$pathQtCreator = "C:\Qt\Tools\QtCreator\bin\qtcreator.exe"
 
-	if (-not(Test-Path $pathQtBundle)) {
-		Output "qt" "Cannot find a bundled Qt installation at '$pathSrc'. Verify source path." Red
-		return
-	}
-  
-	if (-not(Test-Path $path7z)) {
-		Output "qt" "Cannot find a 7-zip installation at '$path7z'. Verify 7z path." Red
-		return
-	}
-  
-	if (-not(Test-Path $pathQtCreator)) {
-		try {
-			Set-Location $pathQt
-			Start-Process $path7z -ArgumentList "x Qt.7z -oC:\" -Wait
-			Copy-Item ($pathQtProject) $pathQtProjectOutput -Recurse -Force
-		}
-		catch {
-			Output "qt" "Could not extract Qt from archive. Are the paths correct?" Red
-			return
-		}
-  
-		Output "qt" "Setup Qt successfully, launching Qt Creator." Green
-		Start-Process $pathQtCreator
-	}
-	else {
-		Output "qt" "Found Qt Creator at ${pathQtCreator}, launching it..." Green
-		Start-Process $pathQtCreator
-	}
+	UseBundle "Qt" "C:\" "C:\Qt\Tools\QtCreator\bin\qtcreator.exe"
+	Copy-Item ($pathQtProject) $pathQtProjectOutput -Recurse -Force
 }
 
 Export-ModuleMember -Function *
