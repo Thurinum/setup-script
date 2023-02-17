@@ -49,6 +49,43 @@ function Set-Env() {
 	[Environment]::SetEnvironmentVariable($Name, $Value, [System.EnvironmentVariableTarget]::Machine)
 }
 
+function Start-Operation() {
+	param (
+		[String] $Scope,
+		[String] $Message,
+		[ScriptBlock] $Action,
+		[ScriptBlock] $OnError
+	)
+
+	Output -NoNewLine "$Scope" "$Message" Cyan
+
+	$count = 0
+	$job = Start-Job $Action
+
+	while ((($job | Select-Object -Property JobStateInfo) | Out-String).Contains("Running")) {
+		$char = "."
+
+		if ($count -eq 3) {
+			$char = "`b`b`b   `b`b`b"
+			$count = 0
+		}
+		else {
+			$count++
+		}
+
+		Output -NoNewline "" "$char"
+		Start-Sleep -Seconds 0.5
+	}
+
+	Output "" ""
+
+	$status = ($job | Select-Object -Property JobStateInfo) | Out-String
+
+	if ($status.Contains("Blocked") -or $status.Contains("Failed")) {
+		Invoke-Command -ScriptBlock $OnError
+	}
+}
+
 function UseBundle() {
 	param(
 		# name of the 7z archive, without extension
@@ -84,12 +121,10 @@ function UseBundle() {
 		Output "$name" "Cannot find a bundle for $name in '$pathBundle'." Red
 		return
 	}
-	
-	try {
-		Start-Process $path7z -ArgumentList "x `"$pathBundle`" -o`"$pathOutput`"" -Wait
-	}
-	catch {
-		Output "$name" "Could not extract $name from archive '$pathArchive'. Are the paths correct?" Red
+	Start-Operation "$name" "Installing $name" -Action {
+		&$path7z x "$pathBundle" -o"$pathOutput"
+	} -OnError {
+		Output "$name" "Could not extract $name from archive '$pathBundle'. Are the paths correct?" Red
 		return
 	}
 
