@@ -40,6 +40,15 @@ function CheckForAdmin() {
 	}
 }
 
+function Set-Env() {
+	param(
+		[String] $Name,
+		[String] $Value
+	)
+
+	[Environment]::SetEnvironmentVariable($Name, $Value, [System.EnvironmentVariableTarget]::Machine)
+}
+
 function UseBundle() {
 	param(
 		# name of the 7z archive, without extension

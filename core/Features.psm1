@@ -128,15 +128,6 @@ function CleanVSCode() {
 	Output "vs code" "Cleaned up VS Code extensions." Green
 }
 
-function Set-Env() {
-	param(
-		[String] $Name,
-		[String] $Value
-	)
-
-	[Environment]::SetEnvironmentVariable($Name, $Value, [System.EnvironmentVariableTarget]::Machine)
-}
-
 # Install IntelliJ IDEA, the Android SDK version 33, and an Android emulator image
 function Install-Android() {
 	$homePath = "C:\Users\${studentId}"
