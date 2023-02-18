@@ -53,6 +53,7 @@ function Start-Operation() {
 	param (
 		[String] $Scope,
 		[String] $Message,
+		[PSObject] $Context,
 		[ScriptBlock] $Action,
 		[ScriptBlock] $OnError
 	)
@@ -60,9 +61,9 @@ function Start-Operation() {
 	Output -NoNewLine "$Scope" "$Message" Cyan
 
 	$count = 0
-	$job = Start-Job $Action
+	$job = Start-Job $Action -InputObject $Context
 
-	while ((($job | Select-Object -Property JobStateInfo) | Out-String).Contains("Running")) {
+	while ($count -ne 3 -or (($job | Select-Object -Property JobStateInfo) | Out-String).Contains("Running")) {
 		$char = "."
 
 		if ($count -eq 3) {
@@ -73,16 +74,17 @@ function Start-Operation() {
 			$count++
 		}
 
-		Output -NoNewline "" "$char"
+		Output -NoNewline "" "$char" Cyan
 		Start-Sleep -Seconds 0.5
 	}
-
-	Output "" ""
 
 	$status = ($job | Select-Object -Property JobStateInfo) | Out-String
 
 	if ($status.Contains("Blocked") -or $status.Contains("Failed")) {
 		Invoke-Command -ScriptBlock $OnError
+		Output "" " failed!" Red -Animate
+	} else {
+		Output "" " done." Cyan -Animate
 	}
 }
 
@@ -98,7 +100,8 @@ function UseBundle() {
 		[parameter(Mandatory = $false)]
 		[String] $pathExec
 	)
-	$path7z = "C:\Program Files\7-Zip\7zG.exe"
+	#$path7z = "C:\Program Files\7-Zip\7zG.exe"
+	$path7z = "C:\Program Files\Manually Installed\7-Zip\7z.exe"
 
 	if (-not(Test-Path $path7z)) {
 		Output "$name" "Cannot find a 7-zip installation at '$path7z'. Verify 7z path." Red
@@ -107,7 +110,13 @@ function UseBundle() {
 
 	if ($pathExec -and (Test-Path $pathExec)) {
 		Output "$name" "Found already installed $name. Launching now..." Green
-		Start-Process $pathExec 
+		try {
+			Start-Process $pathExec 			
+		}
+		catch {
+			Output "$name" "Failed to launch $name process!" Red
+			return
+		}
 		return
 	} 
 	if (!$pathExec -and (Test-Path $pathOutput)) {
@@ -121,9 +130,11 @@ function UseBundle() {
 		Output "$name" "Cannot find a bundle for $name in '$pathBundle'." Red
 		return
 	}
-	&$path7z x "$pathBundle" -o"$pathOutput"
-	Start-Operation "$name" "Installing $name" -Action {
 		
+	$context = @($path7z, $pathBundle, $pathOutput)
+	Start-Operation "$name" "Installing $name" -Context $context -Action {
+		$arg = @($input)[0]	
+		&"$($arg[0])" x "$($arg[1])" -o"$($arg[2])"	
 	} -OnError {
 		Output "$name" "Could not extract $name from archive '$pathBundle'. Are the paths correct?" Red
 		return
@@ -137,7 +148,7 @@ function UseBundle() {
 			Start-Process $pathExec
 		}
 		catch {
-			Output "$name" "Failed to launch $name process!" Red
+			Output "$name" "Failed to install $name process!" Red
 			return
 		}
 	}

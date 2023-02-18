@@ -101,19 +101,19 @@ function CleanVSCode() {
 		"editorconfig.editorconfig"
 		"angular.ng-template"
 		"syler.sass-indented"
-		"haskell.haskell"
 		"redhat.vscode-xml",
 		"ms-vscode.powershell",
 		"tobysmith568.run-in-powershell"
-		"redhat.vscode-xml",
-		"ms-vscode.powershell",
-		"tobysmith568.run-in-powershell",
-		"github.copilot"
+		"github.copilot",
+		"lkrms.inifmt",
+		"vunguyentuan.vscode-css-variables"
 	)
 
 	# remove unwanted extensions
-	Output "vs code" "Uninstalling useless extensions..." Cya
-	Remove-Item $pathVSCodeExtensions\* -Recurse -Force -ErrorAction SilentlyContinue
+	Start-Operation -Scope "vs code" -Message "Uninstalling useless extensions" -Context @($pathVSCodeExtensions) -Action {
+		$arg = @($input)[0]
+		Remove-Item $($arg[0])\* -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+	}
 	
 	# install wanted extensions
 	Output -NoNewLine "vs code" "Installing new extensions...      " Cyan
