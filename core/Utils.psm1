@@ -100,8 +100,7 @@ function UseBundle() {
 		[parameter(Mandatory = $false)]
 		[String] $pathExec
 	)
-	#$path7z = "C:\Program Files\7-Zip\7zG.exe"
-	$path7z = "C:\Program Files\Manually Installed\7-Zip\7z.exe"
+	$path7z = "C:\Program Files\7-Zip\7zG.exe"
 
 	if (-not(Test-Path $path7z)) {
 		Output "$name" "Cannot find a 7-zip installation at '$path7z'. Verify 7z path." Red
