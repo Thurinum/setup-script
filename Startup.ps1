@@ -7,9 +7,9 @@ Import-Module -Name $PSScriptRoot\core\Features
 
 # basicfunction name 		description
 $features = 
-	($true,		"SetFRKeyboard", 		"Change keyboard layout to FR"),
 	($false,	"SetUSKeyboard", 		"Change keyboard layout to US"),
-	($false, 	"SetGitUser", 			"Set the git user and email"),
+	($true,	"SetFRKeyboard", 		"Change keyboard layout to FR"),
+	($false, 	"SetGitUser", 		"Set the git user and email"),
 	($false, 	"SetGitSigning", 		"Setup Git commit signature"),
 	($false, 	"SetDarkTheme", 		"Enable dark mode"),
 	($false, 	"SetRandomWallpaper", 	"Set a random wallpaper"),
