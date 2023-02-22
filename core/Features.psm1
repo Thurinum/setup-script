@@ -138,7 +138,7 @@ function Install-Android() {
 
 	UseBundle "IntelliJ" "C:\JetBrains\apps" "C:\JetBrains\apps\IDEA-U\ch-0\223.8617.56\bin\idea64.exe"
 	UseBundle "AndroidSdk" "$homePath\AppData\Local\Android"
-	UseBundle "AndroidEmulator" "$homePath"
+	UseBundle "AndroidEmulator" "$homePath\.android\avd"
 	UseBundle "GradleCache" "$homePath\.gradle"
 }
 

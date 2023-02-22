@@ -110,7 +110,7 @@ function UseBundle() {
 	if ($pathExec -and (Test-Path $pathExec)) {
 		Output "$name" "Found already installed $name. Launching now..." Green
 		try {
-			Start-Process $pathExec 			
+			Start-Process $pathExec
 		}
 		catch {
 			Output "$name" "Failed to launch $name process!" Red
