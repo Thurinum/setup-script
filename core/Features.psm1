@@ -122,11 +122,7 @@ function CleanVSCode() {
 		Write-Host
 	}	
 
-<<<<<<< HEAD
 	Start-Process "code"
-=======
-	Start-Process -Name "code"
->>>>>>> a8e4b5c9f1d708615739bb26aca80598c8313092
  
 	Output "vs code" "Cleaned up VS Code extensions." Green
 }
