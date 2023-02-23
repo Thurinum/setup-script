@@ -99,12 +99,12 @@ function CleanVSCode() {
 	$pathVSCodeExtensions = $config.vscodeExtensionsPath
 	$vscodeExtWhitelist = $($config.vscodeExtensions).Split(",")
 
-	Stop-Process -Name "code"
+	Stop-Process -Name "code" -ErrorAction SilentlyContinue
 
 	# remove unwanted extensions
 	Start-Operation -Scope "vs code" -Message "Uninstalling useless extensions" -Context @($pathVSCodeExtensions) -Action {
 		$arg = @($input)[0]
-		Remove-Item -Path "$($arg[0])*" -Recurse -Force -ErrorAction Stop
+		Remove-Item -Path "$($arg[0])*" -Recurse -Force -ErrorAction SilentlyContinue
 	}
 
 	# install wanted extensions
