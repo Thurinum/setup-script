@@ -55,7 +55,7 @@ function Start-Operation() {
 		[String] $Message,
 		[PSObject] $Context,
 		[ScriptBlock] $Action,
-		[ScriptBlock] $OnError
+		[ScriptBlock] $OnError = {}
 	)
 
 	Output -NoNewLine "$Scope" "$Message" Cyan
@@ -118,7 +118,7 @@ function UseBundle() {
 		}
 		return
 	} 
-	if (!$pathExec -and (Test-Path $pathOutput)) {
+	if (!$pathExec -and (Test-Path $pathOutput\*)) {
 		Output "$name" "Found already installed $name. Skipping installation." Green
 		return
 	}
@@ -153,6 +153,29 @@ function UseBundle() {
 	}
 
 	Output "$name" "Successfully installed $name.$extraAction" Green
+}
+
+function Show-Dialog() {
+	param(
+		[String] $title = "Notice",
+		[String] $message
+	)
+
+	[reflection.assembly]::loadwithpartialname("System.Windows.Forms") | Out-Null 
+
+	$objForm = New-Object System.Windows.Forms.Form 
+	$objForm.Text = $title
+	$objForm.ControlBox = $false
+	$objForm.Size = New-Object System.Drawing.Size(300,200) 
+	$objForm.StartPosition = "CenterScreen"
+
+	$objLabel = New-Object System.Windows.Forms.Label
+	$objLabel.Location = New-Object System.Drawing.Size(10,20) 
+	$objLabel.Size = New-Object System.Drawing.Size(280,20) 
+	$objLabel.Text = $message
+	$objForm.Controls.Add($objLabel) 
+
+	[void] $objForm.ShowDialog()
 }
 
 Export-ModuleMember -Function *

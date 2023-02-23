@@ -96,35 +96,32 @@ function SetRandomWallpaper() {
 # clean up VS Code by removing useless extensions
 # idea credit: https://github.com/TheodoreLHeureux/setup-script
 function CleanVSCode() {
-	$pathVSCodeExtensions = "C:\Program Files\Microsoft VS Code\data\extensions\"
-	$vscodeExtWhitelist = @(
-		"editorconfig.editorconfig"
-		"angular.ng-template"
-		"syler.sass-indented"
-		"redhat.vscode-xml",
-		"ms-vscode.powershell",
-		"tobysmith568.run-in-powershell"
-		"github.copilot",
-		"lkrms.inifmt",
-		"vunguyentuan.vscode-css-variables"
-	)
+	$pathVSCodeExtensions = $config.vscodeExtensionsPath
+	$vscodeExtWhitelist = $($config.vscodeExtensions).Split(",")
+
+	Stop-Process -Name "code"
 
 	# remove unwanted extensions
 	Start-Operation -Scope "vs code" -Message "Uninstalling useless extensions" -Context @($pathVSCodeExtensions) -Action {
 		$arg = @($input)[0]
-		Remove-Item $($arg[0])\* -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+		Remove-Item -Path "$($arg[0])*" -Recurse -Force -ErrorAction Stop
 	}
-	
+
 	# install wanted extensions
-	Output -NoNewLine "vs code" "Installing new extensions...      " Cyan
+	if ($config.vscodeExtensionsUseCache -eq "true") {
+		UseBundle "VSCodeExtensions" "$pathVSCodeExtensions"
+	} else {
+		Output -NoNewLine "vs code" "Installing new extensions...      " Cyan
   
-	for ($i = 0; $i -lt $vscodeExtWhitelist.Length; $i++) {
-		$progress = ([string]([math]::Round($($i + 1) * 100 / $vscodeExtWhitelist.Length))).PadLeft(3, " ")   
-		code --force --install-extension $vscodeExtWhitelist[$i] > $null  
-		Output -NoNewline "" "`b`b`b`b`b$progress %"
-	}
+		for ($i = 0; $i -lt $vscodeExtWhitelist.Length; $i++) {
+			$progress = ([string]([math]::Round($($i + 1) * 100 / $vscodeExtWhitelist.Length))).PadLeft(3, " ")   
+			code --force --install-extension $vscodeExtWhitelist[$i] > $null  
+			Output -NoNewline "" "`b`b`b`b`b$progress %"
+		}
+
+		Write-Host
+	}	
  
-	Write-Host
 	Output "vs code" "Cleaned up VS Code extensions." Green
 }
 
