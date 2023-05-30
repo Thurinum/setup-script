@@ -143,7 +143,7 @@ function Install-Android() {
 
 # Install the Flutter SDK alongside IntelliJ IDEA, the Android SDK version 33, and an Android emulator image
 function Install-Flutter() {
-	$flutterPath = "C:\Users\${studentId}\Flutter"
+	$flutterPath = "C:\Users\${studentId}\Flutter\bin"
 
 	Install-Android
 	Set-Env "PATH" "${Env:PATH};$flutterPath"
@@ -160,11 +160,29 @@ function Install-Flutter() {
 	Output "flutter" "Installing the Android SDK manager..." Cyan
 	Start-Process "C:\Users\${studentId}\AppData\Local\Android\Sdk\tools\bin\sdkmanager.bat" -ArgumentList "--install `"cmdline-tools;latest`"" -Wait
 
-	Output "flutter" "Accepting Flutter's Google evil megacorp licenses..." Cyan
-	Start-Process "C:\Users\${studentId}\AppData\Local\Android\Sdk\tools\bin\sdkmanager.bat" -ArgumentList "--licenses" -Wait
+	$jdkPath = "C:\Users\2156153\.jdks\corretto-11.0.19"
+	Output "flutter" "Accepting Flutter's licenses..." Cyan
+	
+	if (-not(Test-Path $jdkPath)) {
+		TryGetSdk
+	}	
+	$env:JAVA_HOME = $jdkPath;
 
 	Output "flutter" "Flutter installed successfully. Running Flutter doctor..." Cyan
 	flutter doctor
+}
+
+function TryGetSdk() {
+	$userInput = Read-Host "`nIs Amazon Coretto JDK 11 installed? [y]"
+  
+	switch ($userInput) {
+		{ $_ -in 'y', 'Y', 'yes', 'yea', 'yeah', 'ay', 'si' } {
+			return
+		}
+		Default {
+			TryGetSdk
+		}
+	}
 }
 
 # Install the Qt framework
