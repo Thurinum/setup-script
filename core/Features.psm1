@@ -144,13 +144,12 @@ function Install-Android() {
 
 # Install the Flutter SDK alongside IntelliJ IDEA, the Android SDK version 33, and an Android emulator image
 function Install-Flutter() {
-	$flutterPath = "C:\Users\${studentId}\Flutter\bin"
+	$flutterPath = "C:\Users\${studentId}\Flutter"
 
 	Install-Android
-	Set-Env "PATH" "${Env:PATH};$flutterPath"
+	Set-Env "PATH" "${Env:PATH};$flutterPath\bin"
 	UseBundle "Flutter" "$flutterPath"
 
-	git config --global --add safe.directory "C:\Users\${studentId}\Flutter"
 	git config --global --add safe.directory C:/Flutter
 
 	try {
@@ -159,9 +158,10 @@ function Install-Flutter() {
 		Output "flutter" "Installing the Android SDK manager..." Cyan
 		Start-Process "C:\Users\${studentId}\AppData\Local\Android\Sdk\tools\bin\sdkmanager.bat" -ArgumentList "--install `"cmdline-tools;latest`"" -Wait
 
-		$jdkPath = "C:\Users\${studentId}\.jdks\corretto-11.0.19"
-		UseBundle "Coretto11" "$jdkPath"
-		$env:JAVA_HOME = $jdkPath
+		$jdkPath = "C:\Users\${studentId}\.jdks"
+		$javaEnv = "$jdkPath\corretto-11.0.19"
+		UseBundle "Coretto11" "$javaEnv"
+		$env:JAVA_HOME = "$javaEnv"
 		Set-Env "PATH" "${Env:PATH};$jdkPath" -MachineWide 1
 
 		Output "flutter" "Accepting Flutter's licenses..." Cyan
