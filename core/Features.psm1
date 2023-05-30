@@ -141,6 +141,32 @@ function Install-Android() {
 	UseBundle "GradleCache" "$homePath\.gradle"
 }
 
+# Install the Flutter SDK alongside IntelliJ IDEA, the Android SDK version 33, and an Android emulator image
+function Install-Flutter() {
+	$flutterPath = "C:\Users\${studentId}\Flutter"
+
+	Install-Android
+	Set-Env "PATH" "${Env:PATH};$flutterPath"
+	UseBundle "Flutter" "$flutterPath"
+
+	try {
+		flutter --disable-telemetry
+	}
+	catch {
+		Output "flutter" "Failed to install Flutter." Red
+		return
+	}
+
+	Output "flutter" "Installing the Android SDK manager..." Cyan
+	Start-Process "C:\Users\${studentId}\AppData\Local\Android\Sdk\tools\bin\sdkmanager.bat" -ArgumentList "--install `"cmdline-tools;latest`"" -Wait
+
+	Output "flutter" "Accepting Flutter's Google evil megacorp licenses..." Cyan
+	Start-Process "C:\Users\${studentId}\AppData\Local\Android\Sdk\tools\bin\sdkmanager.bat" -ArgumentList "--licenses" -Wait
+
+	Output "flutter" "Flutter installed successfully. Running Flutter doctor..." Cyan
+	flutter doctor
+}
+
 # Install the Qt framework
 function Install-Qt() {
 	$pathQtProject = "$($pathRoot)software\QtProject"

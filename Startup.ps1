@@ -15,7 +15,8 @@ $features =
 	($false, 	"SetRandomWallpaper", 	"Set a random wallpaper"),
 	($true, 	"CleanVSCode", 			"Clean up the mess of vs code"),
 	($true, 	"Install-Qt", 			"Setup the Qt framework and launch Qt Creator"),
-	($true, 	"Install-Android", 		"Setup IntelliJ IDEA and the Android SDK")
+	($true, 	"Install-Android", 		"Setup IntelliJ IDEA and the Android SDK"),
+	($true, 	"Install-Flutter", 		"Setup the Flutter SDK")
 
 # Show main menu
 function ShowMenu() {

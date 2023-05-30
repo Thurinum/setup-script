@@ -46,7 +46,7 @@ function Set-Env() {
 		[String] $Value
 	)
 
-	[Environment]::SetEnvironmentVariable($Name, $Value, [System.EnvironmentVariableTarget]::Machine)
+	[Environment]::SetEnvironmentVariable($Name, $Value, [System.EnvironmentVariableTarget]::User)
 }
 
 function Start-Operation() {
