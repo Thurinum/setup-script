@@ -149,8 +149,11 @@ function Install-Flutter() {
 	Set-Env "PATH" "${Env:PATH};$flutterPath"
 	UseBundle "Flutter" "$flutterPath"
 
+	git config --global --add safe.directory "C:\Users\${studentId}\Flutter"
+	git config --global --add safe.directory C:/Flutter
+
 	try {
-		flutter --disable-telemetry
+		flutter
 	}
 	catch {
 		Output "flutter" "Failed to install Flutter." Red
@@ -167,6 +170,7 @@ function Install-Flutter() {
 		TryGetSdk
 	}	
 	$env:JAVA_HOME = $jdkPath;
+	flutter doctor --android-licenses
 
 	Output "flutter" "Flutter installed successfully. Running Flutter doctor..." Cyan
 	flutter doctor
