@@ -133,6 +133,7 @@ function Install-Android() {
 	
 	Set-Env "ANDROID_HOME" "$homePath\AppData\Local\Android\Sdk"
 	Set-Env "ANDROID_ROOT" "$homePath\AppData\Local\Android\Sdk"
+	Set-Env "ANDROID_SDK_ROOT" "$homePath\AppData\Local\Android\Sdk"
 	Set-Env "ANDROID_AVD_HOME" "$homePath\.android"
 
 	UseBundle "IntelliJ" "C:\JetBrains\apps" "C:\JetBrains\apps\IDEA-U\ch-0\223.8617.56\bin\idea64.exe"
@@ -153,40 +154,26 @@ function Install-Flutter() {
 	git config --global --add safe.directory C:/Flutter
 
 	try {
-		flutter
+		flutter --version
+
+		Output "flutter" "Installing the Android SDK manager..." Cyan
+		Start-Process "C:\Users\${studentId}\AppData\Local\Android\Sdk\tools\bin\sdkmanager.bat" -ArgumentList "--install `"cmdline-tools;latest`"" -Wait
+
+		$jdkPath = "C:\Users\${studentId}\.jdks\corretto-11.0.19"
+		UseBundle "Coretto11" "$jdkPath"
+		$env:JAVA_HOME = $jdkPath
+		Set-Env "JAVA_HOME" $jdkPath
+
+		Output "flutter" "Accepting Flutter's licenses..." Cyan
+		flutter doctor --android-licenses
 	}
 	catch {
 		Output "flutter" "Failed to install Flutter." Red
 		return
 	}
 
-	Output "flutter" "Installing the Android SDK manager..." Cyan
-	Start-Process "C:\Users\${studentId}\AppData\Local\Android\Sdk\tools\bin\sdkmanager.bat" -ArgumentList "--install `"cmdline-tools;latest`"" -Wait
-
-	$jdkPath = "C:\Users\2156153\.jdks\corretto-11.0.19"
-	Output "flutter" "Accepting Flutter's licenses..." Cyan
-	
-	if (-not(Test-Path $jdkPath)) {
-		TryGetSdk
-	}	
-	$env:JAVA_HOME = $jdkPath;
-	flutter doctor --android-licenses
-
 	Output "flutter" "Flutter installed successfully. Running Flutter doctor..." Cyan
 	flutter doctor
-}
-
-function TryGetSdk() {
-	$userInput = Read-Host "`nIs Amazon Coretto JDK 11 installed? [y]"
-  
-	switch ($userInput) {
-		{ $_ -in 'y', 'Y', 'yes', 'yea', 'yeah', 'ay', 'si' } {
-			return
-		}
-		Default {
-			TryGetSdk
-		}
-	}
 }
 
 # Install the Qt framework
