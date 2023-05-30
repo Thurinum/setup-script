@@ -43,10 +43,16 @@ function CheckForAdmin() {
 function Set-Env() {
 	param(
 		[String] $Name,
-		[String] $Value
+		[String] $Value,
+		[switch] $MachineWide = $false
 	)
 
-	[Environment]::SetEnvironmentVariable($Name, $Value, [System.EnvironmentVariableTarget]::User)
+	$scope = if ($MachineWide -eq $true) { 
+		[System.EnvironmentVariableTarget]::Machine 
+	} else { 
+		[System.EnvironmentVariableTarget]::User 
+	}
+	[Environment]::SetEnvironmentVariable($Name, $Value, $scope)
 }
 
 function Start-Operation() {

@@ -162,7 +162,7 @@ function Install-Flutter() {
 		$jdkPath = "C:\Users\${studentId}\.jdks\corretto-11.0.19"
 		UseBundle "Coretto11" "$jdkPath"
 		$env:JAVA_HOME = $jdkPath
-		Set-Env "JAVA_HOME" $jdkPath
+		Set-Env "PATH" "${Env:PATH};$jdkPath" -MachineWide 1
 
 		Output "flutter" "Accepting Flutter's licenses..." Cyan
 		flutter doctor --android-licenses
