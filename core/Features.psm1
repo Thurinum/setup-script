@@ -159,10 +159,10 @@ function Install-Flutter() {
 		Start-Process "C:\Users\${studentId}\AppData\Local\Android\Sdk\tools\bin\sdkmanager.bat" -ArgumentList "--install `"cmdline-tools;latest`"" -Wait
 
 		$jdkPath = "C:\Users\${studentId}\.jdks"
-		$javaEnv = "$jdkPath\corretto-11.0.19"
-		UseBundle "Coretto11" "$javaEnv"
+		$javaEnv = "$jdkPath\corretto-11.0.19\bin"
+		UseBundle "Coretto11" "$jdkPath"
 		$env:JAVA_HOME = "$javaEnv"
-		Set-Env "PATH" "${Env:PATH};$jdkPath" -MachineWide 1
+		Set-Env "PATH" "${Env:PATH};$javaEnv" -MachineWide 1
 
 		Output "flutter" "Accepting Flutter's licenses..." Cyan
 		flutter doctor --android-licenses
